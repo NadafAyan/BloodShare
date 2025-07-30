@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom"
 import { Button } from "../components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card"
-import { Heart, Users, MapPin, Calendar } from "lucide-react"
+import { Heart, Users, MapPin, Calendar,LogOut } from "lucide-react"
+//import LogoutButton from "../components/ui/logout"
 
 export default function HomePage() {
   return (
