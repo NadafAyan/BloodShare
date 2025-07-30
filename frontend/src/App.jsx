@@ -5,13 +5,12 @@ import EmergencyPage from "./pages/EmergencyPage"
 import DonorsPage from "./pages/DonorsPage"
 import CampsPage from "./pages/CampsPage"
 import AdminApproval from "./pages/AdminApproval"  
-
 import {
   createThirdwebClient,
   getContract,
   resolveMethod,
 } from "thirdweb";
-import { defineChain } from "thirdweb/chains";
+import { baseSepolia, defineChain } from "thirdweb/chains";
 import { ThirdwebProvider } from "thirdweb/react";
 
 // create the client with your clientId, or secretKey if in a server environment
@@ -54,7 +53,7 @@ export const contract = getContract({
   abi: contractABI, // Add this line
 });
 */
-
+/*
 const contractABI = [
   {
     "inputs": [],
@@ -327,18 +326,17 @@ const contractABI = [
     "type": "function"
   }
 ];
-
+*/
 // create the client with your clientId
 export const client = createThirdwebClient({
-  clientId: "2c28257152e6a732d8a97dbf793eb33b", // Your actual client ID
+  clientId: "0xEfA93B667ADaDD20e309A7C45C37802c3055840D", // Your actual client ID
 });
 
 // connect to your contract with ABI
 export const contract = getContract({
   client,
   chain: defineChain(11155111),
-  address: "0xa144E1772FFbce910b588CF2A6F674E31b068e2B",
-  abi: contractABI, // Add the complete ABI
+  address: "0xEfA93B667ADaDD20e309A7C45C37802c3055840D",
 });
 
 function App() {

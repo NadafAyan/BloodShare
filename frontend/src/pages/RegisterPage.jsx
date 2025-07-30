@@ -25,7 +25,15 @@ import { useNavigate } from "react-router-dom";
 import { useActiveAccount, ConnectButton } from "thirdweb/react";
 import { prepareContractCall } from "thirdweb";
 import { useSendTransaction } from "thirdweb/react";
-import { contract,client } from "../App";
+import { client } from "../app/clinet";
+import { getContract } from "thirdweb";
+import { sepolia, defineChain } from "thirdweb/chains";
+
+const contract = getContract({
+  client,
+  chain: defineChain(11155111),
+  address: "0xEfA93B667ADaDD20e309A7C45C37802c3055840D",
+});
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -91,9 +99,10 @@ export default function RegisterPage() {
     setIsSubmitting(true);
 
     try {
+      // Option 1: Try with full function signature
       const transaction = prepareContractCall({
         contract,
-        method: "registerDonor",
+        method: "function registerDonor(string memory _name, uint8 _age, string memory _bloodGroup, string memory _city)",
         params: [
           formData.fullName,
           parseInt(formData.age),
@@ -101,12 +110,14 @@ export default function RegisterPage() {
           formData.city,
         ],
       });
-      console.log(transaction)
+
+      console.log("Prepared transaction:", transaction);
 
       sendTransaction(transaction, {
-        onSuccess: () => {
+        onSuccess: (result) => {
+          console.log("Transaction successful:", result);
           alert("Registration successful! Your request is pending admin approval.");
-          navigate("/");
+          navigate("/camps");
         },
         onError: (error) => {
           console.error("Transaction failed:", error);
@@ -114,7 +125,7 @@ export default function RegisterPage() {
         },
       });
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error preparing transaction:", error);
       alert("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);

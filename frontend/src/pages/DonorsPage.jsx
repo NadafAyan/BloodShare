@@ -3,50 +3,38 @@ import { useReadContract } from "thirdweb/react";
 import { getContract } from "thirdweb";
 import { client } from "../app/clinet"; // your configured Thirdweb client
 import { useEffect, useState } from "react";
-import { sepolia } from "thirdweb/chains";
-import { contract } from "../App";
-/*
+import { sepolia,defineChain } from "thirdweb/chains";
+
+
 const contract = getContract({
   client,
-  address: "0x7366736884B619fDBD3B2645F4338F6aE0859514", // replace with your deployed contract address
-  abi: // ABI (in another file or inline)
-[
-  {
-    "inputs": [],
-    "name": "getApprovedDonors",
-    "outputs": [
-      {
-        "components": [
-          { "internalType": "string", "name": "name", "type": "string" },
-          { "internalType": "uint8", "name": "age", "type": "uint8" },
-          { "internalType": "string", "name": "bloodGroup", "type": "string" },
-          { "internalType": "string", "name": "city", "type": "string" },
-          { "internalType": "bool", "name": "approved", "type": "bool" },
-          { "internalType": "address", "name": "registeredBy", "type": "address" }
-        ],
-        "internalType": "struct DonorRegistration.Donor[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
-]
-,
-  chain:sepolia
-});*/
+  chain: defineChain(11155111),
+  address: "0xEfA93B667ADaDD20e309A7C45C37802c3055840D",
+});
+
+
+
+
 
 export default function DonorsPage() {
-  const { data, isLoading, error } = useReadContract({
+  const { data, isLoading,error } = useReadContract({
     contract,
     method:
       "function getApprovedDonors() view returns ((string name, uint8 age, string bloodGroup, string city, bool approved, address registeredBy)[])",
     params: [],
   });
+console.log(data)
 
-  console.log(data)
-  console.log(isLoading)
+
+  /*const { data, isLoading, error } = useReadContract({
+    contract,
+    method:
+      "function getApprovedDonors() view returns ((string name, uint8 age, string bloodGroup, string city, bool approved, address registeredBy)[])",
+    params: [],
+  });*/
+
+  //console.log(data)
+  //console.log(isLoading)
   const [donors, setDonors] = useState([]);
 
   useEffect(() => {
