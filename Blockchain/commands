@@ -1,0 +1,11 @@
+npx thirdweb create
+npx thirdweb deploy
+
+client ID:
+2c28257152e6a732d8a97dbf793eb33b
+
+Secret Key:
+oSaIfOGcMZXtX8524I5NrjufCrAGh9Nu39RzC3lRT-mAAakagSV9qwT_KGye3F1FSXiRsMYpfNE-HNHkGXBNRg
+
+
+npx thirdweb deploy -k oSaIfOGcMZXtX8524I5NrjufCrAGh9Nu39RzC3lRT-mAAakagSV9qwT_KGye3F1FSXiRsMYpfNE-HNHkGXBNRg

@@ -12,5 +12,4 @@ const pool = new Pool({
 
 // console.log(process.env.DB_PASSWORD);
 
-
 module.exports = pool;

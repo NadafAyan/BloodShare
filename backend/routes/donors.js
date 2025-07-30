@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
+// === [POST] Register a Donor ===
 router.post("/register", async (req, res) => {
   try {
     const {
@@ -13,12 +14,22 @@ router.post("/register", async (req, res) => {
       city,
       address,
       emergencyContact,
-      medicalConditions,
+      medicalConditions = null,
       agreeToTerms,
-      availableForEmergency
+      availableForEmergency,
     } = req.body;
 
-    const query = `
+        console.log("Received body:", req.body); // DEBUG
+
+    // Basic field validation
+    if (
+      !fullName || !email || !phone || !age || !bloodGroup || !city || !address ||
+      !emergencyContact || agreeToTerms === undefined || availableForEmergency === undefined
+    ) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const insertQuery = `
       INSERT INTO donors (
         full_name, email, phone, age, blood_group, city, address,
         emergency_contact, medical_conditions, agree_to_terms, available_for_emergency
@@ -35,22 +46,29 @@ router.post("/register", async (req, res) => {
       city,
       address,
       emergencyContact,
-      medicalConditions || null,
+      medicalConditions,
       agreeToTerms,
       availableForEmergency,
     ];
 
-    const result = await db.query(query, values);
-    res.status(201).json({ message: "Donor registered", donorId: result.rows[0].id });
-  } catch (error) {
-    console.error("Error inserting donor:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    const result = await db.query(insertQuery, values);
+
+    res.status(201).json({
+      message: "Donor registered successfully",
+      donorId: result.rows[0].id,
+    });
+
+  } catch (err) {
+    console.error("Error during donor registration:", err.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
+// === [GET] Search Donors ===
 router.get("/search", async (req, res) => {
   try {
     const { bloodGroup, city, availability } = req.query;
+
     const conditions = [];
     const values = [];
 
@@ -64,8 +82,8 @@ router.get("/search", async (req, res) => {
       values.push(city);
     }
 
-    if (availability) {
-      const isAvailable = availability === "Available";
+    if (availability !== undefined) {
+      const isAvailable = availability.toLowerCase() === "available";
       conditions.push(`available_for_emergency = $${values.length + 1}`);
       values.push(isAvailable);
     }
@@ -74,10 +92,10 @@ router.get("/search", async (req, res) => {
     const query = `SELECT * FROM donors ${whereClause} ORDER BY created_at DESC`;
 
     const result = await db.query(query, values);
-    res.json(result.rows);
+    res.status(200).json(result.rows);
   } catch (err) {
-    console.error("Error fetching donors:", err);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error fetching donor search results:", err.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
